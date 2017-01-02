@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -ex
+
+cargo install \
+    diesel_cli \
+    --no-default-features \
+    --features postgres
+
+$CARGO_HOME/bin/diesel setup \
+&& $CARGO_HOM/bin/diesel migration run
+cargo uninstall diesel_cli
