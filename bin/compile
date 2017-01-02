@@ -7,18 +7,19 @@ export DATABASE_URL=$(cat $ENV_DIR/DATABASE_URL)
 
 set -eu
 
-cargo install \
-    diesel_cli \
-    --no-default-features \
-    --features postgres
+CURRENT=$(diesel --version | awk '{print $2}')
+NEW=$(cargo search diesel_cli | awk '{print $2}' | sed 's/[()]//g')
+if [ "$NEW" != "$OLD" ]; then
+    echo "-----> Updating diesel_cli"
+    cargo uninstall diesel_cli
+    cargo install diesel_cli --no-default-features --features postgres
+fi
 
 echo "-----> Running diesel setup"
 cd $BUILD_DIR
-$CARGO_HOME/bin/diesel setup && \
-    echo "-----> Running DB migrations" && \
-    $CARGO_HOME/bin/diesel migration run
-res=$?
-cargo uninstall diesel_cli
-if [ $res -ne 0 ]; then
+$CARGO_HOME/bin/diesel setup \
+    && echo "-----> Running DB migrations" \
+    && $CARGO_HOME/bin/diesel migration run
+if [ $? -ne 0 ]; then
     exit 1
 fi
