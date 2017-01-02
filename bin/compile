@@ -14,7 +14,7 @@ cargo install \
 
 echo "-----> Running diesel setup"
 cd $BUILD_DIR
-res = $($CARGO_HOME/bin/diesel setup \
+res=$($CARGO_HOME/bin/diesel setup \
     && echo "-----> Running DB migrations" \
     && $CARGO_HOM/bin/diesel migration run)
 cargo uninstall diesel_cli
