@@ -1,5 +1,9 @@
 #!/bin/bash
 
+ENV_DIR=${3:-}
+
+export DATABASE_URL=$(cat $ENV_DIR/DATABASE_URL)
+
 set -ex
 
 cargo install \
@@ -7,6 +11,8 @@ cargo install \
     --no-default-features \
     --features postgres
 
+echo "-----> Running diesel setup"
 $CARGO_HOME/bin/diesel setup \
+&& echo "-----> Running DB migrations" \
 && $CARGO_HOM/bin/diesel migration run
 cargo uninstall diesel_cli
