@@ -1,5 +1,6 @@
 #!/bin/bash
 
+BUILD_DIR=${1:-}
 ENV_DIR=${3:-}
 
 export DATABASE_URL=$(cat $ENV_DIR/DATABASE_URL)
@@ -12,6 +13,7 @@ cargo install \
     --features postgres
 
 echo "-----> Running diesel setup"
+cd $BUILD_DIR
 $CARGO_HOME/bin/diesel setup \
 && echo "-----> Running DB migrations" \
 && $CARGO_HOM/bin/diesel migration run
