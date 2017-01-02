@@ -5,7 +5,7 @@ ENV_DIR=${3:-}
 
 export DATABASE_URL=$(cat $ENV_DIR/DATABASE_URL)
 
-set -ex
+set -eu
 
 cargo install \
     diesel_cli \
@@ -16,7 +16,7 @@ echo "-----> Running diesel setup"
 cd $BUILD_DIR
 $CARGO_HOME/bin/diesel setup && \
     echo "-----> Running DB migrations" && \
-    $CARGO_HOME/bin/diesel migration Running
+    $CARGO_HOME/bin/diesel migration run
 res=$?
 cargo uninstall diesel_cli
 if [ $res -ne 0 ]; then
