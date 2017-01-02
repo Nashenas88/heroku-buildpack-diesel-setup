@@ -11,7 +11,9 @@ CURRENT=$(diesel --version | awk '{print $2}')
 NEW=$(cargo search diesel_cli | awk '{print $2}' | sed 's/[()]//g')
 if [ "$NEW" != "$CURRENT" ]; then
     echo "-----> Updating diesel_cli"
-    cargo uninstall diesel_cli
+    if [ "" != "$(which diesel)" ]; then
+        cargo uninstall diesel_cli
+    fi
     cargo install diesel_cli --no-default-features --features postgres
 fi
 
